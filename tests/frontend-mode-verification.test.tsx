@@ -12,9 +12,11 @@ describe("Frontend Mode - Verifikasi Halaman Publik Tanpa Database", () => {
   it("halaman beranda (Home) berhasil dirender", () => {
     const el = HomePage();
     const html = renderToStaticMarkup(el);
-    expect(html).toContain("Beli Kopi");
-    expect(html).toContain("Penerbitan Buku");
-    expect(html).toContain("Publikasi Artikel Ilmiah");
+    const teks = html.replace(/<[^>]*>/g, "");
+    expect(teks).toContain("Beli Kopi");
+    expect(teks).toContain("Empat prinsip, satu tujuan: publikasi lebih mudah.");
+    expect(teks).toContain("Semudah Beli Kopi");
+    expect(teks).toContain("Fast Track, Tanpa Ribet");
   });
 
   it("halaman katalog telah-terbit menampilkan daftar buku terbit dengan ISBN dan harga", async () => {

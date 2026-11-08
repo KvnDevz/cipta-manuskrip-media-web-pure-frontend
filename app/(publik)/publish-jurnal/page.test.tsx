@@ -18,31 +18,39 @@ describe("publish-jurnal", () => {
     expect(html).toContain("Publikasi Artikel Ilmiah Sekali Klik.");
   });
 
-  it("memuat keempat area dengan tepat satu placeholder aset per area", () => {
-    for (const area of ["Bukti Submission", "Dokumentasi Korespondensi", "Logo Indeksasi", "Fasilitas"]) {
-      expect(html).toContain(area);
-    }
-    // Satu slot per tiga area aset: hitungannya mengunci bahwa editan
-    // berikutnya tidak membiarkan satu area tampil tanpa slotnya.
-    expect((html.match(/\[Aset dari klien\]/g) ?? []).length).toBe(3);
+  it("section keunggulan menggantikan ruang bukti publikasi dan tetap memuat fasilitas", () => {
+    expect(html).toContain("KEUNGGULAN KAMI");
+    expect(html).toContain("Mengapa pilih publikasi jurnal di kami?");
+    expect(html).toContain("Bukti korespondensi lengkap");
+    expect(html).toContain("Belum ada artikel? Tidak masalah.");
+    expect(html).toContain("Prosesnya semudah beli kopi");
+    expect(html).toContain("VIDEO PROSES PUBLIKASI");
+    expect(html).toContain("Fasilitas");
+    // Section lama beserta placeholder asetnya tidak boleh kembali.
+    expect(html).not.toContain("Ruang untuk bukti publikasi.");
+    expect(html).not.toContain("[Aset dari klien]");
+    expect(html).not.toContain("journal-asset-card");
   });
 
   it("tidak mengarang klaim vendor atau indeksasi di luar brief", () => {
     // Penjaga data-jujur: github dan keanggotaan tetap tidak ada di brief.
-    // OJS kini DIMINTA eksplisit oleh brief §3.2 sebagai mockup antarmuka,
+    // OJS kini DIMINTA eksplisit oleh brief §3.2 sebagai bukti antarmuka,
     // jadi dikeluarkan dari larangan secara sempit (bukan membuka klaim baru).
     expect(html).not.toMatch(/github|keanggotaan/i);
   });
 
-  it("§3.2 memuat foto dosen dan ketiga mockup bukti otentik", () => {
+  it("§3.2 memuat foto dosen dan ketiga gambar bukti korespondensi dari klien", () => {
     expect(html).toContain("/aset/jurnal-dosen.jpg");
-    expect(html).toContain("Your submission has been reviewed and we encourage you to submit revisions...");
-    expect(html).toContain("Timeline Publikasi SINTA 2");
-    expect(html).toContain("Accepted &amp; copyediting");
-    expect(html).toContain("Your submission has been sent for another round of review");
-    expect(html).toContain("Submission accepted");
-    expect(html).toContain("Workflow / Round 1");
-    expect(html).toContain("mockup ilustrasi");
+    expect(html).toContain("memegang laptop dengan latar teal polos");
+    expect(html).not.toContain("tangan bersedekap di ruang kerja akademik");
+    expect(html).toContain("/aset/bukti-jurnal-email.png");
+    expect(html).toContain("/aset/bukti-jurnal-timeline-sinta-2.png");
+    expect(html).toContain("/aset/bukti-jurnal-ojs.png");
+    expect(html).toContain("bukti korespondensi");
+    // Mockup teks lama tidak boleh muncul lagi setelah gambar klien dipasang.
+    expect(html).not.toContain("mockup ilustrasi");
+    expect(html).not.toContain("Timeline Publikasi SINTA 2</strong>");
+    expect(html).not.toContain("Mockup antarmuka OJS");
     // Visual CSS abstrak sudah diganti foto.
     expect(html).not.toContain("journal-paper-front");
     expect(html).not.toContain("journal-ring-one");

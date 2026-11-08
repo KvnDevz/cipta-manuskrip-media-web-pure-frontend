@@ -484,8 +484,10 @@ body {
 .kat-card-media {
   position: relative;
   display: block;
-  height: 258px;
-  padding: 18px 18px 0;
+  aspect-ratio: 2 / 3;
+  height: auto;
+  /* Ruang atas ekstra menjaga badge status tidak menutupi sampul. */
+  padding: 42px 18px 18px;
   overflow: hidden;
   background:
     radial-gradient(ellipse at 60% 10%, rgba(255, 255, 255, 0.9), transparent 60%),
@@ -497,13 +499,14 @@ body {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: center bottom;
+  object-position: center;
   filter: drop-shadow(0 12px 20px rgba(16, 42, 49, 0.16));
   transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.25, 1);
 }
 
 .kat-card:hover .kat-card-cover {
-  transform: translateY(-3px) scale(1.012);
+  /* Tanpa scale: tepi sampul tetap utuh, tidak terpotong overflow media. */
+  transform: translateY(-2px);
 }
 
 .kat-card-badge {
@@ -1021,6 +1024,13 @@ body {
 
 .katalog-skeleton-crumbs {
   gap: 10px;
+}
+
+.katalog-skeleton-card .skeleton-cover {
+  width: calc(100% - 36px);
+  height: auto;
+  aspect-ratio: 2 / 3;
+  margin: 42px 18px 18px;
 }
 
 .katalog-skeleton-card .kat-card-body {
@@ -2184,8 +2194,9 @@ body {
   }
 
   .kat-card-media {
-    height: 196px;
-    padding: 12px 12px 0;
+    aspect-ratio: 2 / 3;
+    height: auto;
+    padding: 38px 12px 12px;
   }
 
   .kat-card-body {
@@ -2363,7 +2374,8 @@ body {
   }
 
   .kat-card-media {
-    height: 250px;
+    aspect-ratio: 2 / 3;
+    height: auto;
   }
 }
 
@@ -2508,11 +2520,12 @@ body {
 
 /* --- Penyesuaian hasil tinjau visual ------------------------------------ */
 
-/* Ponsel kecil: satu kolom dengan sampul yang tidak memenuhi layar. */
+/* Ponsel kecil: satu kolom, sampul potret tetap utuh. */
 @media (max-width: 420px) {
   .kat-card-media {
-    height: 232px;
-    padding: 14px 14px 0;
+    aspect-ratio: 2 / 3;
+    height: auto;
+    padding: 38px 14px 14px;
   }
 
   .kat-card {
@@ -4250,11 +4263,11 @@ html {
     .package-card,
     .package-heading,
     .journal-facility,
-    .journal-asset-card,
+    .journal-advantage-card,
+    .journal-video,
     .journal-next-step,
     .journal-category-card,
-    .about-value-card,
-    .about-steps li,
+    .about-team-role,
     .about-pending-card,
     .kat-card {
       animation: cmm-view-reveal linear both;
@@ -4307,11 +4320,11 @@ html {
   .package-card,
   .package-heading,
   .journal-facility,
-  .journal-asset-card,
+  .journal-advantage-card,
+  .journal-video,
   .journal-next-step,
   .journal-category-card,
-  .about-value-card,
-  .about-steps li,
+  .about-team-role,
   .about-pending-card,
   .kat-card,
   .motion-pending {
@@ -5690,159 +5703,15 @@ html {
 }
 
 /* ==========================================================================
-   LANJUTAN TAHAP 1 — navbar 2 menu, latar orbit "ramai", tipografi senior
+   LANJUTAN TAHAP 1 — navbar 2 menu, tipografi senior
    --------------------------------------------------------------------------
-   Arahan klien: (1) navbar cukup Beranda + Tentang Kami; (2) efek orbit
-   dipertahankan sebagai BACKGROUND, dibikin lebih ramai & lebih terlihat;
-   (3) tulisan dibesarkan lagi karena audiens utamanya dosen senior.
+   Arahan klien: navbar cukup Beranda + Tentang Kami; tulisan dibesarkan
+   untuk audiens dosen senior. Dekorasi orbit latar sudah dihapus agar hero
+   lebih bersih, sementara kartu foto dan buku tetap dipertahankan.
    ========================================================================== */
 
 .home-hero--foto .hero-photo-layout {
   z-index: 1;
-}
-
-/* --- Latar orbit: 7 cincin + 4 busur + 6 medali foto + 20 bintik --------- */
-
-.hero-bg-orbit {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  isolation: isolate;
-}
-
-/* Kisi kertas grafik samar, memudar di tepi — tekstur akademik. */
-.hero-bg-orbit::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(16, 42, 49, 0.14) 1px, transparent 1px);
-  background-size: 30px 30px;
-  opacity: 0.5;
-  mask-image: radial-gradient(ellipse 68% 84% at 50% 48%, #000 8%, transparent 82%);
-}
-
-.hero-bg-ring,
-.hero-bg-busur,
-.hero-bg-karrier {
-  position: absolute;
-  /* Tiga "sistem orbit": tengah, kiri, kanan. Tanpa geseran ini semua
-     lintasan kecil akan menumpuk persis di satu titik tengah. */
-  top: calc(50% + var(--geser-y, 0px));
-  left: calc(50% + var(--geser-x, 0px));
-  width: var(--w);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  animation: hero-orbit-spin var(--dur) linear infinite;
-  animation-direction: var(--putar, normal);
-  animation-delay: var(--tunda, 0s);
-  will-change: transform;
-}
-
-.hero-bg-ring {
-  border: var(--tebal, 1.5px) var(--gaya, solid) var(--warna, rgba(9, 103, 125, 0.26));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
-}
-
-/* Titik satelit penanda arah putar pada tiap cincin. */
-.hero-bg-ring::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -5px;
-  width: 9px;
-  height: 9px;
-  margin-top: -4.5px;
-  border-radius: 50%;
-  background: var(--titik, #c2cc08);
-  box-shadow: 0 0 0 5px var(--halo, rgba(194, 204, 8, 0.15));
-}
-
-/* Busur warna: dua kuadran berputar, memberi kesan lebih hidup. */
-.hero-bg-busur {
-  border: 3px solid transparent;
-  border-top-color: var(--atas, rgba(194, 204, 8, 0.6));
-  border-right-color: var(--kanan, rgba(9, 103, 125, 0.4));
-}
-
-.hero-bg-karrier {
-  border: 0;
-}
-
-/* Inovasi: satelitnya foto asli. Putaran berlawanan arah membuat wajah
-   tetap tegak walau pembawanya berputar. */
-.hero-bg-medali {
-  position: absolute;
-  top: -23px;
-  left: 50%;
-  width: 46px;
-  height: 46px;
-  margin-left: -23px;
-  overflow: hidden;
-  border: 3px solid rgba(255, 255, 255, 0.96);
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 8px 22px rgba(16, 42, 49, 0.28), 0 0 0 6px rgba(255, 255, 255, 0.4);
-  animation: hero-orbit-counter var(--dur) linear infinite;
-  animation-direction: var(--putar, normal);
-  animation-delay: var(--tunda, 0s);
-  will-change: transform;
-}
-
-.hero-bg-medali img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hero-bg-bintik {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  width: var(--s);
-  height: var(--s);
-  border-radius: 50%;
-  background: var(--warna);
-  box-shadow: 0 0 9px 2px var(--warna);
-  animation: hero-bg-kedip 3.4s ease-in-out infinite;
-  animation-delay: var(--tunda);
-}
-
-/* Cahaya: dasar hangat di belakang, tengah putih agar headline tetap tajam. */
-.hero-bg-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: min(72vw, 660px);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-}
-
-.hero-bg-glow--dasar {
-  background: radial-gradient(circle, rgba(9, 103, 125, 0.12) 0%, rgba(212, 163, 70, 0.09) 45%, transparent 72%);
-}
-
-.hero-bg-glow--tengah {
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.74) 0%, rgba(255, 255, 255, 0.42) 36%, rgba(255, 255, 255, 0) 70%);
-}
-
-@keyframes hero-orbit-spin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-@keyframes hero-orbit-counter {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
-}
-
-@keyframes hero-bg-kedip {
-  0%, 100% { opacity: 0.28; transform: scale(0.7); }
-  50% { opacity: 1; transform: scale(1.3); }
 }
 
 /* --- Keterbacaan lanjutan untuk audiens dosen senior -------------------- */
@@ -5955,22 +5824,6 @@ html {
 }
 
 @media (max-width: 640px) {
-  .hero-bg-orbit {
-    opacity: 0.88;
-  }
-
-  .hero-bg-medali {
-    top: -16px;
-    width: 32px;
-    height: 32px;
-    margin-left: -16px;
-    border-width: 2px;
-  }
-
-  .hero-bg-busur {
-    border-width: 2px;
-  }
-
   .hero-photo-card {
     padding: 17px 15px;
   }
@@ -6010,21 +5863,5 @@ html {
 
   .home-hero--foto .hero-description {
     font-size: 19px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-bg-ring,
-  .hero-bg-busur,
-  .hero-bg-karrier,
-  .hero-bg-medali,
-  .hero-bg-bintik {
-    animation: none;
-  }
-}
-
-@media print {
-  .hero-bg-orbit {
-    display: none;
   }
 }

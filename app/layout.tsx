@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { metadataSitus } from "@/lib/site-metadata";
 import "./globals.css";
 import "./home-sections.css";
+import "./hero-headline.css";
+import "./hero-comparison.css";
 
 /**
  * Metadata root dibentuk fungsi murni di `lib/site-metadata.ts`.

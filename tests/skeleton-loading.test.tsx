@@ -60,4 +60,14 @@ describe("kerangka muat tiap segmen rute", () => {
     const html = renderToStaticMarkup(<Komponen />);
     expect(html).not.toContain("<main");
   });
+
+  it("publish-buku menyediakan empat placeholder pilar setelah asistensi", () => {
+    const html = renderToStaticMarkup(<PublishBukuLoading />);
+    const posisiAsistensi = html.indexOf('class="assist-section"');
+    const posisiPilar = html.indexOf('class="publish-trust"');
+    expect(posisiAsistensi).toBeGreaterThanOrEqual(0);
+    expect(posisiPilar).toBeGreaterThan(posisiAsistensi);
+    const kerangkaPilar = html.slice(posisiPilar);
+    expect((kerangkaPilar.match(/class="skeleton-cover"/g) ?? [])).toHaveLength(4);
+  });
 });

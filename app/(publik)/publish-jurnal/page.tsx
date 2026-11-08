@@ -1,11 +1,12 @@
 /* eslint-disable @next/next/no-img-element -- foto lokal statis di public/aset/,
-   sudah dioptimasi ke JPEG q82; src langsung dipakai agar preview & tes visual
+   sudah dioptimasi ke JPEG q90; src langsung dipakai agar preview & tes visual
    tidak bergantung pada image optimizer Next (pola sama dengan HeroPhotoCard). */
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, BadgeCheck, Eye, FileText, Fingerprint, GraduationCap, Languages, LayoutTemplate, Link2, MessageSquareText, MessagesSquare, PanelsTopLeft, PenLine, ScanSearch, ShieldCheck, Timer } from "lucide-react";
+import { ArrowDown, ArrowUpRight, BadgeCheck, Eye, Fingerprint, GraduationCap, Languages, LayoutTemplate, Link2, MessagesSquare, PanelsTopLeft, PenLine, ScanSearch, ShieldCheck, Timer } from "lucide-react";
 import type { Metadata } from "next";
 import { FASILITAS_JURNAL } from "@/content/site";
-import { MockupGmail, MockupTimelineSinta, MockupOjs } from "@/components/BuktiOtentik";
+import { BuktiEmail, BuktiTimelineSinta, BuktiOjs } from "@/components/BuktiOtentik";
+import { JournalAdvantages } from "@/components/JournalAdvantages";
 
 /** Judul tab halaman layanan jurnal. */
 export const metadata: Metadata = {
@@ -30,11 +31,7 @@ const IKON_FASILITAS = [
   BadgeCheck,
 ] as const;
 
-const AREA_ASET = [
-  { id: "bukti", judul: "Bukti Submission", penanda: "01", ikon: FileText },
-  { id: "korespondensi", judul: "Dokumentasi Korespondensi", penanda: "02", ikon: MessageSquareText },
-  { id: "indeksasi", judul: "Logo Indeksasi", penanda: "03", ikon: ScanSearch },
-];
+
 
 /** UI editorial jurnal; seluruh konten layanan tetap mengikuti brief. */
 export default function Page() {
@@ -55,34 +52,20 @@ export default function Page() {
           <img
             className="journal-hero-foto"
             src="/aset/jurnal-dosen.jpg"
-            width={900}
-            height={600}
-            alt="Dosen Indonesia berjas biru dongker berdiri dengan tangan bersedekap di ruang kerja akademik."
+            width={1200}
+            height={800}
+            alt="Dosen Indonesia berjas biru dongker memegang laptop dengan latar teal polos."
           />
-          <div className="bukti-float bukti-float--email"><MockupGmail /></div>
-          <div className="bukti-float bukti-float--timeline"><MockupTimelineSinta /></div>
-          <div className="bukti-float bukti-float--ojs"><MockupOjs /></div>
+          <div className="bukti-float bukti-float--email"><BuktiEmail /></div>
+          <div className="bukti-float bukti-float--timeline"><BuktiTimelineSinta /></div>
+          <div className="bukti-float bukti-float--ojs"><BuktiOjs /></div>
           <p className="journal-visual-caption journal-visual-caption--foto">
-            NASKAH · DOKUMENTASI · PUBLIKASI — mockup ilustrasi, bukti asli menyusul
+            NASKAH · DOKUMENTASI · PUBLIKASI — bukti korespondensi
           </p>
         </div>
       </section>
 
-      <section className="journal-assets-section" aria-labelledby="journal-assets-title">
-        <div className="journal-section-heading">
-          <div><p className="journal-section-kicker">DOKUMENTASI</p><h2 id="journal-assets-title">Ruang untuk bukti publikasi.</h2></div>
-          <p>Aset akan ditampilkan setelah materi dari klien tersedia.</p>
-        </div>
-        <div className="journal-assets-grid">
-          {AREA_ASET.map(({ id, judul, penanda, ikon: Icon }) => (
-            <section id={id} key={id} className="journal-asset-card">
-              <div className="journal-asset-top"><span className="journal-asset-number">{penanda} / 03</span><Icon size={19} strokeWidth={1.6} /></div>
-              <h3>{judul}</h3>
-              <div className="journal-asset-placeholder"><span className="asset-placeholder-icon"><Icon size={21} /></span><span>[Aset dari klien]</span><i /></div>
-            </section>
-          ))}
-        </div>
-      </section>
+      <JournalAdvantages />
 
       <section id="fasilitas" className="journal-facilities-section">
         <div className="journal-facilities-heading">

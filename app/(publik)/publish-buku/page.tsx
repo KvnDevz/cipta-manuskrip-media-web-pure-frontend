@@ -9,6 +9,7 @@ import { CataloguePreview } from "@/components/CataloguePreview";
 import { FormAsistensi } from "@/components/FormAsistensi";
 import { PackagePicker } from "@/components/PackagePicker";
 import { PackageSelectionStatus } from "@/components/PackageSelectionStatus";
+import { TrustPillars } from "@/components/TrustPillars";
 import { PAKET_BUKU, PREVIEW_LIMIT } from "@/content/site";
 
 // Wajib: halaman membaca database. Tanpa ini Next.js membekukan hasil query
@@ -58,8 +59,8 @@ export default async function Page() {
           <img
             className="publish-hero-foto"
             src="/aset/buku-hero.jpg"
-            width={1200}
-            height={800}
+            width={353}
+            height={251}
             alt="Penulis muda Indonesia tersenyum menunjukkan ponsel bertanda PUBLISHED, disertai ilustrasi lambang Perpustakaan Nasional dan barcode ISBN."
           />
           <p className="publish-hero-foto-catatan">
@@ -81,14 +82,18 @@ export default async function Page() {
           <img
             className="assist-foto"
             src="/aset/asistensi-buku.jpg"
-            width={900}
-            height={600}
-            alt="Dua mahasiswi Indonesia berdiskusi di meja belajar; satu mencatat ide buku di buku catatan, satu lagi menunjuk layar laptop."
+            width={963}
+            height={423}
+            alt="Dua perempuan Indonesia di meja kayu dengan laptop dan buku catatan terbuka; yang satu bertanya “Belum punya naskah buku?”, yang lain menenangkan sambil menulis, “Tenang, kami bantu mulai dari ide.”"
           />
-          <span className="assist-foto-label">Ide Buku: Topik Utama, Detail Bab, Target Pembaca</span>
         </div>
         <div className="assist-form-card"><PackageSelectionStatus /><FormAsistensi jenis="buku" /></div>
       </section>
+
+      {/* Komponen asli dari beranda, dipakai kembali setelah asistensi buku. */}
+      <div className="publish-trust">
+        <TrustPillars />
+      </div>
 
       <section className="book-preview-section">
         <div className="preview-intro">

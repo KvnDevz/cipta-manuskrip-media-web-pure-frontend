@@ -60,6 +60,53 @@ export const KONTAK: { adminBuku: string; adminJurnal: string } = {
 };
 
 /**
+ * Akun media sosial resmi yang dikirim klien untuk section "Medsos" di
+ * halaman Tentang Kami. Handle dan alamat surel disalin persis dari materi
+ * klien; tidak ada akun yang dikarang.
+ *
+ * Catatan: materi klien menyebut halaman Facebook sebagai "Penerbit Cipta
+ * Manuskrip" tanpa menuliskan URL-nya, jadi URL di bawah memakai pola handle
+ * yang sama dengan akun lain dan perlu dikonfirmasi klien sebelum rilis.
+ */
+export const MEDIA_SOSIAL: ReadonlyArray<{
+  jenis: "facebook" | "threads" | "tiktok" | "instagram" | "gmail";
+  label: string;
+  nilai: string;
+  href: string;
+}> = [
+  {
+    jenis: "facebook",
+    label: "Facebook",
+    nilai: "Penerbit Cipta Manuskrip",
+    href: "https://www.facebook.com/ciptamanuskripmedia",
+  },
+  {
+    jenis: "threads",
+    label: "Threads",
+    nilai: "@ciptamanuskripmedia",
+    href: "https://www.threads.net/@ciptamanuskripmedia",
+  },
+  {
+    jenis: "tiktok",
+    label: "TikTok",
+    nilai: "@ciptamanuskripmedia",
+    href: "https://www.tiktok.com/@ciptamanuskripmedia",
+  },
+  {
+    jenis: "instagram",
+    label: "Instagram",
+    nilai: "@ciptamanuskripmedia",
+    href: "https://www.instagram.com/ciptamanuskripmedia/",
+  },
+  {
+    jenis: "gmail",
+    label: "Gmail",
+    nilai: "ciptamanuskripmedia@gmail.com",
+    href: "mailto:ciptamanuskripmedia@gmail.com",
+  },
+];
+
+/**
  * Tiga tier contoh untuk prototipe visual, tertinggi ke terendah.
  * Nama, harga, dan fasilitas ini dikarang atas persetujuan pemilik proyek
  * (21 Oktober 2026) dan BUKAN penawaran resmi. Ganti setelah klien
@@ -175,8 +222,8 @@ export const SPESIFIKASI_BUKU = {
 export type JenisVisualPilar = "legalitas" | "isbn" | "naskah" | "distribusi";
 
 /**
- * Section 2.2 — empat pilar kepercayaan, menggantikan pintasan katalog di
- * beranda. Teks judul & deskripsi mengikuti brief kata per kata.
+ * Empat pilar kepercayaan pada /publish-buku, setelah section asistensi.
+ * Teks judul & deskripsi mengikuti brief kata per kata.
  *
  * `jenisVisual` menentukan ilustrasi kartu. Dua entri pertama masih
  * PLACEHOLDER: logo resmi Kemenkumham, Perpusnas RI, dan barcode ISBN

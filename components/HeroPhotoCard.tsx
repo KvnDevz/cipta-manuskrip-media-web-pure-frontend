@@ -4,13 +4,16 @@
 import { Coffee, Globe, Mail, PenLine } from "lucide-react";
 
 /**
- * Dua kartu foto di kiri dan kanan headline beranda (kontrak desain Tahap 1).
+ * Dua kolom foto di dalam satu panel landscape beranda.
  *
  * Arahan inti: vektor/animasi CSS abstrak (garis orbit, buku 3D melayang)
  * diganti foto orang Indonesia dalam suasana hangat — kafe untuk analogi
- * "Beli kopi", ruang riset/meja kerja untuk "Publikasi di CMM". Kartu CMM
+ * "Beli kopi", ruang riset/meja kerja untuk "Publikasi di CMM". Kolom CMM
  * menutup dengan bukti otentik: logo resmi, sistem OJS, dan korespondensi
  * surel. Seluruh foto bersifat ilustrasi dan mudah diganti materi klien.
+ *
+ * Komponen ini sengaja tidak membungkus diri dengan bingkai kartu sendiri;
+ * wadah `.hero-comparison` di halaman yang memberi latar landscape menyatu.
  */
 
 type LangkahFoto = {

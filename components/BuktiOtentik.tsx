@@ -1,81 +1,54 @@
-import { Check, Inbox, Mail, MoreHorizontal, X } from "lucide-react";
+/* eslint-disable @next/next/no-img-element -- tangkapan layar statis dari klien
+   di public/aset/; src langsung dipakai agar preview dan tes visual tidak
+   bergantung pada image optimizer Next (pola sama dengan foto hero jurnal). */
 
 /**
- * Mockup "bukti otentik" untuk hero `/publish-jurnal` (brief §3.2).
+ * Bukti korespondensi untuk hero `/publish-jurnal` (brief §3.2).
  *
- * Ketiganya sengaja berupa MOCKUP, bukan dokumen asli: tanggal memakai
- * "—" dan ada catatan "ilustrasi alur", supaya tidak ada riwayat
- * korespondensi karangan yang terbaca sebagai bukti sungguhan. Saat klien
- * mengirim tangkapan layar asli, ganti isi kartu ini dengan <img> dan
- * hapus catatan mockup.
- *
- * Ketiga kartu dipakai sebagai floating cards di sekeliling foto dosen.
+ * Ketiga elemen sebelumnya adalah mockup ilustrasi. Sekarang klien sudah
+ * mengirim tangkapan layar, jadi kartu CSS diganti gambar asli apa adanya:
+ * isi, tanggal, dan sensor/buram dari berkas sumber tidak direkayasa ulang.
+ * Komponen hanya menjaga rasio intrinsic supaya gambar tidak tercrop.
  */
 
-export function MockupGmail() {
+export function BuktiEmail() {
   return (
-    <div className="bukti-card bukti-card--gmail">
-      <div className="bukti-card__kepala">
-        <span className="bukti-gmail-mark" aria-hidden="true"><Mail size={12} /></span>
-        <strong>Inbox</strong>
-        <MoreHorizontal size={13} aria-hidden="true" />
-      </div>
-      <div className="bukti-email">
-        <span className="bukti-email__pengirim">
-          <Inbox size={11} aria-hidden="true" /> Editorial Office
-        </span>
-        <p>Your submission has been reviewed and we encourage you to submit revisions...</p>
-      </div>
-      <p className="bukti-card__catatan">Bukti korespondensi email · mockup</p>
-    </div>
+    <img
+      className="bukti-image"
+      src="/aset/bukti-jurnal-email.png"
+      width={467}
+      height={392}
+      alt="Tangkapan layar email Gmail: artikel telah ditinjau dan penulis diminta mengirimkan revisi."
+      loading="lazy"
+      decoding="async"
+    />
   );
 }
 
-const TAHAP_TIMELINE = [
-  "Pengiriman artikel",
-  "Komentar editorial",
-  "Review 1–4",
-  "Submit revisi",
-  "Accepted & copyediting",
-];
-
-export function MockupTimelineSinta() {
+export function BuktiTimelineSinta() {
   return (
-    <div className="bukti-card bukti-card--timeline">
-      <div className="bukti-card__kepala">
-        <strong>Timeline Publikasi SINTA 2</strong>
-        <span>riwayat</span>
-      </div>
-      <ul className="bukti-timeline">
-        {TAHAP_TIMELINE.map((tahap, i) => (
-          <li key={tahap}>
-            <span className="bukti-timeline__tanggal" aria-label="tanggal menyusul">—</span>
-            <span className="bukti-timeline__titik" aria-hidden="true">
-              {i === TAHAP_TIMELINE.length - 1 ? <Check size={9} /> : null}
-            </span>
-            <span>{tahap}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="bukti-card__catatan">Ilustrasi alur, bukan data riwayat</p>
-    </div>
+    <img
+      className="bukti-image"
+      src="/aset/bukti-jurnal-timeline-sinta-2.png"
+      width={486}
+      height={501}
+      alt="Tangkapan layar timeline publikasi Jurnal SINTA 2 dari pengiriman artikel hingga accepted dan copyediting; identitas artikel, jurnal, dan penulis disamarkan."
+      loading="lazy"
+      decoding="async"
+    />
   );
 }
 
-export function MockupOjs() {
+export function BuktiOjs() {
   return (
-    <div className="bukti-card bukti-card--ojs">
-      <div className="bukti-card__kepala bukti-card__kepala--ojs">
-        <span className="bukti-ojs-dot" aria-hidden="true" />
-        <strong>Notifications</strong>
-        <X size={12} aria-hidden="true" />
-      </div>
-      <div className="bukti-ojs-body">
-        <p>Your submission has been sent for another round of review</p>
-        <p>Submission accepted</p>
-        <span className="bukti-ojs-workflow">Workflow / Round 1</span>
-      </div>
-      <p className="bukti-card__catatan">Mockup antarmuka OJS</p>
-    </div>
+    <img
+      className="bukti-image"
+      src="/aset/bukti-jurnal-ojs.png"
+      width={811}
+      height={295}
+      alt="Tangkapan layar notifikasi OJS: artikel dikirimkan untuk putaran review berikutnya."
+      loading="lazy"
+      decoding="async"
+    />
   );
 }

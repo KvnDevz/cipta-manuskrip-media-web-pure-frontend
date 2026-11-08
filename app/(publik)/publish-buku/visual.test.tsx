@@ -30,16 +30,32 @@ describe("visual §3 publish-buku", () => {
     const html = renderToStaticMarkup(await Page());
     expect(html).toContain("assist-section--foto");
     expect(html).toContain("/aset/asistensi-buku.jpg");
-    expect(html).toContain("Ide Buku: Topik Utama, Detail Bab, Target Pembaca");
+    expect(html).not.toContain("Ide Buku: Topik Utama, Detail Bab, Target Pembaca");
+    expect(html).not.toContain("assist-foto-label");
     expect(html).toContain("Topik Asistensi Penulisan Buku");
     // Urutan DOM: foto sebelum form, dan keduanya dalam section yang sama.
     expect(html.indexOf("assist-media")).toBeLessThan(html.indexOf("assist-form-card"));
   });
 
+  it("empat pilar lama muncul tepat setelah asistensi dan sebelum katalog", async () => {
+    const html = renderToStaticMarkup(await Page());
+    const posisiAsistensi = html.indexOf('id="asistensi"');
+    const posisiPilar = html.indexOf('class="trust-pillars ');
+    const posisiKatalog = html.indexOf('class="book-preview-section"');
+
+    expect(posisiAsistensi).toBeGreaterThanOrEqual(0);
+    expect(posisiPilar).toBeGreaterThan(posisiAsistensi);
+    expect(posisiKatalog).toBeGreaterThan(posisiPilar);
+    expect((html.match(/class="trust-card"/g) ?? [])).toHaveLength(4);
+    expect(html).toContain('id="trust-title"');
+    expect(html).toContain("Mengapa Memilih Penerbit ");
+    expect(html).toContain("Cipta Manuskrip Media?");
+  });
+
   it("foto diberi alt yang menjelaskan isinya (bukan alt kosong)", async () => {
     const html = renderToStaticMarkup(await Page());
     expect(html).toMatch(/alt="Penulis muda Indonesia[^"]+PUBLISHED[^"]+"/);
-    expect(html).toMatch(/alt="Dua mahasiswi Indonesia[^"]+"/);
+    expect(html).toMatch(/alt="Dua perempuan Indonesia[^"]+"/);
   });
 
   it("gaya fade-in: foto tanpa bingkai menyatu ke latar, teks kiri / gambar kanan", () => {
@@ -51,6 +67,17 @@ describe("visual §3 publish-buku", () => {
     expect(css).toContain("@keyframes sec3-foto-masuk");
     expect(css).toContain("prefers-reduced-motion: reduce");
     expect(css).toContain(".publish-hero-foto, .assist-foto, .journal-hero-foto { animation: none; }");
+    // Foto asistensi diperbesar di kolom kanan yang lebih lebar, rasio
+    // panorama tetap agar balon teks tidak tercrop, dan fade hanya menyamping.
+    const assistFoto = css.match(/\.assist-foto \{[^}]+\}/)?.[0] ?? "";
+    expect(assistFoto).toContain("width: 100%");
+    expect(assistFoto).toContain("aspect-ratio: 963 / 423");
+    expect(assistFoto).toContain("border-radius: 0");
+    expect(assistFoto).toContain("mask-image: linear-gradient(90deg");
+    expect(assistFoto).not.toContain("linear-gradient(180deg");
+    expect(assistFoto).not.toContain("mask-composite");
+    expect(css).toContain("grid-template-columns: minmax(300px, 0.75fr) minmax(0, 1.25fr)");
+    expect(css).toContain(".assist-media { position: relative; display: grid; width: 100%; height: 330px;");
     // §4–7: hero jurnal ikut fade-in, banner About full-bleed, badge SINTA berwarna.
     expect(css).toContain(".journal-hero-foto { width: 100%; height: 100%;");
     expect(css).toContain(".journal-hero .journal-hero-description { max-width: 340px; }");

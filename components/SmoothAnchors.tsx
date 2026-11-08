@@ -5,7 +5,7 @@ import { useEffect } from "react";
 /**
  * Menggulir halus untuk tautan jangkar dalam satu halaman.
  *
- * Halaman publik memakai jangkar (`#pilih-layanan`, `#paket`, `#asistensi`)
+ * Halaman publik memakai jangkar (`#prinsip-publikasi`, `#paket`, `#asistensi`)
  * supaya pengunjung tidak perlu menggulir jauh. Tanpa ini, lompatannya
  * mendadak dan posisi baru sulit diikuti mata.
  *

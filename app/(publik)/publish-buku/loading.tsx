@@ -2,7 +2,8 @@
  * Kerangka muat halaman Penerbitan Buku.
  *
  * Susunannya meniru halaman aslinya — banner bersudut bulat, tiga kartu
- * paket sejajar, lalu blok asistensi dua kolom — sehingga saat konten
+ * paket sejajar, blok asistensi dua kolom, lalu empat pilar kepercayaan —
+ * sehingga saat konten
  * datang tidak ada lompatan tata letak yang membuat mata kehilangan
  * tempat. Halaman ini membaca database untuk pratinjau katalog, jadi pada
  * sambungan lambat kerangka inilah yang terlihat.
@@ -72,6 +73,18 @@ export default function Loading() {
           <span className="skeleton-line" style={{ width: "100%", height: 48, marginTop: 20, borderRadius: 12 }} />
         </div>
       </section>
+
+      <div className="publish-trust" aria-hidden="true">
+        <div className="trust-pillars home-skeleton-trust">
+          <span className="skeleton-line" style={{ width: 190, height: 9 }} />
+          <span className="skeleton-line skeleton-title" style={{ width: "min(520px, 74%)", height: 32, marginTop: 16 }} />
+          <div className="trust-grid">
+            {[0, 1, 2, 3].map((i) => (
+              <span className="skeleton-cover" key={i} style={{ height: 280 }} />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

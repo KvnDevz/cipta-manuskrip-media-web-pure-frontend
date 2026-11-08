@@ -10,8 +10,9 @@ import {
 import { PILAR_KEPERCAYAAN, type JenisVisualPilar } from "@/content/site";
 
 /**
- * Section 2.2 — "Mengapa Memilih Penerbit Cipta Manuskrip Media?"
- * Menggantikan pintasan katalog di beranda.
+ * "Mengapa Memilih Penerbit Cipta Manuskrip Media?"
+ * Komponen lama dipakai kembali di /publish-buku, tepat setelah asistensi.
+ * Beranda tetap memakai Prinsip Publikasi CMM, bukan section ini.
  *
  * Empat pilar kepercayaan dengan kartu elegan. Dua pilar pertama meminta
  * logo resmi (Kemenkumham, Perpusnas RI + barcode ISBN); berkas itu belum

@@ -28,27 +28,24 @@ export default function Loading() {
         </div>
       </section>
 
-      <section className="journal-assets-section" aria-hidden="true">
-        <div className="journal-section-heading">
-          <div>
-            <span className="skeleton-line" style={{ width: 140, height: 9 }} />
-            <span className="skeleton-line skeleton-title" style={{ width: "min(340px, 70%)", height: 32, marginTop: 14 }} />
-          </div>
-          <span className="skeleton-line" style={{ width: 240, height: 12 }} />
+      <section className="journal-advantages-section" aria-hidden="true">
+        <div className="journal-advantages-head">
+          <span className="skeleton-line" style={{ width: 140, height: 9 }} />
+          <span className="skeleton-line skeleton-title" style={{ width: "min(440px, 86%)", height: 32, marginTop: 14 }} />
         </div>
-        <div className="journal-assets-grid">
+        <div className="journal-advantages-grid">
           {Array.from({ length: 3 }, (_, i) => (
-            <div key={i} className="journal-asset-card">
-              <div className="home-skeleton-between">
-                <span className="skeleton-line" style={{ width: 54, height: 9, marginTop: 0 }} />
-                <span className="skeleton-pill" style={{ width: 30, height: 30, borderRadius: 9 }} />
-              </div>
-              <span className="skeleton-line skeleton-title" style={{ width: "76%", height: 18, marginTop: 18 }} />
+            <div key={i} className="journal-advantage-card">
+              <span className="skeleton-pill" style={{ width: 46, height: 46, borderRadius: 12 }} />
+              <span className="skeleton-line" style={{ width: 26, height: 9, marginTop: 16 }} />
+              <span className="skeleton-line skeleton-title" style={{ width: "82%", height: 18, marginTop: 10 }} />
               <span className="skeleton-line" style={{ width: "96%", height: 11, marginTop: 14 }} />
               <span className="skeleton-line" style={{ width: "64%", height: 11 }} />
-              <span className="skeleton-cover" style={{ height: 120, marginTop: 18 }} />
             </div>
           ))}
+        </div>
+        <div className="journal-video journal-video--skeleton">
+          <span className="skeleton-cover" style={{ width: "100%", height: "100%", borderRadius: 0 }} />
         </div>
       </section>
 
