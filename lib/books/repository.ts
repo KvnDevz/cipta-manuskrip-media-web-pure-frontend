@@ -1,4 +1,3 @@
-import { query, execute } from "../db/query";
 import { slugify } from "../validation/slug";
 import { validateBookInput, validateBookUpdateInput } from "../validation/book";
 import { normalizePage } from "./pagination";
@@ -12,11 +11,121 @@ export type { Book, BookStatus, Page, WriteResult } from "./types";
 const PAGE_SIZE_BAWAAN = 12;
 
 /**
- * Jumlah buku per halaman. Dibaca dari environment supaya bisa diubah
- * tanpa menyentuh kode; nilai yang tidak masuk akal diabaikan diam-diam
- * dan diganti nilai bawaan, karena katalog yang tampil lebih penting
- * daripada kesalahan konfigurasi yang membuat halaman gagal total.
+ * Data contoh buku in-memory untuk mode front-end tanpa database MySQL.
  */
+const SAMPLE_BOOKS: Book[] = [
+  {
+    id: "cmm-buku-01",
+    title: "Metodologi Penelitian Kualitatif & Kuantitatif",
+    slug: "metodologi-penelitian-kualitatif-kuantitatif",
+    author: "Dr. H. Rahmat Hidayat, M.Pd.",
+    synopsis:
+      "Panduan komprehensif metodologi penelitian untuk mahasiswa, dosen, dan peneliti dalam merancang dan menyusun karya ilmiah bermutu tinggi.",
+    publisherInfo: "CV Cipta Manuskrip Media",
+    bookInfo: "Cetakan I, 2024. 240 hlm. 15,5 x 23 cm.",
+    coverPath: "covers/buku-01.webp",
+    status: "published",
+    estimatedRelease: null,
+    isbn: "978-623-00-1234-5",
+    pricePrint: 85000,
+    priceEbook: 45000,
+    createdAt: new Date("2024-01-15T08:00:00Z"),
+    updatedAt: new Date("2024-01-15T08:00:00Z"),
+  },
+  {
+    id: "cmm-buku-02",
+    title: "Pengantar Tata Kelola & Kebijakan Publik",
+    slug: "pengantar-tata-kelola-kebijakan-publik",
+    author: "Prof. Dr. Siti Aminah, M.Si.",
+    synopsis:
+      "Analisis komparatif mengenai dinamika perumusan, implementasi, dan evaluasi kebijakan publik di tengah akselerasi transformasi digital.",
+    publisherInfo: "CV Cipta Manuskrip Media",
+    bookInfo: "Cetakan I, 2024. 280 hlm. 15,5 x 23 cm.",
+    coverPath: "covers/buku-02.webp",
+    status: "published",
+    estimatedRelease: null,
+    isbn: "978-623-00-1235-2",
+    pricePrint: 95000,
+    priceEbook: 50000,
+    createdAt: new Date("2024-02-10T08:00:00Z"),
+    updatedAt: new Date("2024-02-10T08:00:00Z"),
+  },
+  {
+    id: "cmm-buku-03",
+    title: "Manajemen Inovasi dan Kewirausahaan Digital",
+    slug: "manajemen-inovasi-dan-kewirausahaan-digital",
+    author: "Budi Santoso, S.E., M.M.",
+    synopsis:
+      "Strategi praktis membangun dan mengembangkan keunggulan bersaing bagi startup dan pelaku usaha kreatif di era disrupsi.",
+    publisherInfo: "CV Cipta Manuskrip Media",
+    bookInfo: "Cetakan I, 2024. 210 hlm. 14,8 x 21 cm.",
+    coverPath: "covers/buku-03.webp",
+    status: "published",
+    estimatedRelease: null,
+    isbn: "978-623-00-1236-9",
+    pricePrint: 78000,
+    priceEbook: 40000,
+    createdAt: new Date("2024-03-05T08:00:00Z"),
+    updatedAt: new Date("2024-03-05T08:00:00Z"),
+  },
+  {
+    id: "cmm-buku-04",
+    title: "Komunikasi Interpersonal dalam Praktik Pendidikan",
+    slug: "komunikasi-interpersonal-dalam-praktik-pendidikan",
+    author: "Dra. Nurul Hidayati, M.I.Kom.",
+    synopsis:
+      "Kupas tuntas pola relasi komunikatif antara pendidik dan peserta didik guna menciptakan lingkungan belajar inklusif dan kolaboratif.",
+    publisherInfo: "CV Cipta Manuskrip Media",
+    bookInfo: "Cetakan I, 2024. 195 hlm. 14,8 x 21 cm.",
+    coverPath: "covers/buku-04.webp",
+    status: "published",
+    estimatedRelease: null,
+    isbn: "978-623-00-1237-6",
+    pricePrint: 72000,
+    priceEbook: 38000,
+    createdAt: new Date("2024-04-12T08:00:00Z"),
+    updatedAt: new Date("2024-04-12T08:00:00Z"),
+  },
+  {
+    id: "cmm-buku-05",
+    title: "Statistika Terapan untuk Sains dan Sosial",
+    slug: "statistika-terapan-untuk-sains-dan-sosial",
+    author: "Dr. Ahmad Fauzi, M.Sc.",
+    synopsis:
+      "Pengantar analisis data kuantitatif mulai dari uji beda rata-rata hingga regresi multivariat dengan aplikasi komputer.",
+    publisherInfo: "CV Cipta Manuskrip Media",
+    bookInfo: "Sedang dalam proses tata letak dan pengajuan ISBN.",
+    coverPath: "covers/buku-05.webp",
+    status: "upcoming",
+    estimatedRelease: "Desember 2024",
+    isbn: null,
+    pricePrint: null,
+    priceEbook: null,
+    createdAt: new Date("2024-05-01T08:00:00Z"),
+    updatedAt: new Date("2024-05-01T08:00:00Z"),
+  },
+  {
+    id: "cmm-buku-06",
+    title: "Hukum Bisnis dan Perlindungan Konsumen",
+    slug: "hukum-bisnis-dan-perlindungan-konsumen",
+    author: "Dr. Hendra Wijaya, S.H., M.H.",
+    synopsis:
+      "Aspek-aspek yuridis transaksi niaga elektronik dan jaminan kepastian hukum bagi pelaku usaha serta konsumen.",
+    publisherInfo: "CV Cipta Manuskrip Media",
+    bookInfo: "Sedang dalam proses penyuntingan naskah.",
+    coverPath: "covers/buku-06.webp",
+    status: "upcoming",
+    estimatedRelease: "Januari 2025",
+    isbn: null,
+    pricePrint: null,
+    priceEbook: null,
+    createdAt: new Date("2024-05-15T08:00:00Z"),
+    updatedAt: new Date("2024-05-15T08:00:00Z"),
+  },
+];
+
+let booksStore: Book[] = [...SAMPLE_BOOKS];
+
 export function pageSizeBawaan(): number {
   const mentah = process.env.BOOKS_PER_PAGE;
   if (mentah === undefined || mentah.trim() === "") return PAGE_SIZE_BAWAAN;
@@ -50,15 +159,6 @@ function jadikanHalaman(
 
 /**
  * Daftar buku satu status, terurut A–Z, satu halaman.
- *
- * `ORDER BY title ASC, id ASC` — `id` sebagai pemecah seri membuat
- * pagination deterministik ketika dua buku berjudul sama; tanpa itu
- * urutan baris bisa berbeda antar pemanggilan dan satu buku muncul
- * dua kali sementara buku lain hilang.
- *
- * `page` pada hasil sudah dinormalkan, sehingga pemanggil tidak perlu
- * menormalkan lagi dan penanda halaman aktif tidak bisa menyimpang dari
- * isi yang ditampilkan.
  */
 export async function listBooks(opts: {
   status: BookStatus;
@@ -68,123 +168,75 @@ export async function listBooks(opts: {
   const { status } = opts;
   const pageSize = pageSizeDipakai(opts.pageSize);
 
-  const [hitung] = await query<{ total: number }>(
-    "SELECT COUNT(*) AS total FROM books WHERE status = ?",
-    [status]
-  );
-  const total = Number(hitung.total);
+  const disaring = booksStore
+    .filter((b) => b.status === status)
+    .sort((a, b) => a.title.localeCompare(b.title, "id"));
+
+  const total = disaring.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const page = normalizePage(opts.page, totalPages);
 
   const offset = (page - 1) * pageSize;
-  const baris = await query<Record<string, unknown>>(
-    `SELECT ${KOLOM_BUKU} FROM books WHERE status = ? ORDER BY title ASC, id ASC LIMIT ? OFFSET ?`,
-    [status, Number(pageSize), Number(offset)]
-  );
+  const items = disaring.slice(offset, offset + pageSize);
 
-  return jadikanHalaman(baris.map(mapRow), total, page, pageSize);
+  return jadikanHalaman(items, total, page, pageSize);
 }
 
 /**
  * Seluruh buku, kedua status, untuk sitemap.
- *
- * Terpisah dari `listAllBooks` karena fungsi itu berhalaman (bawaan 12) —
- * sitemap yang memakainya terpotong tanpa sadar. Daftar di sini utuh dan
- * terurut judul agar keluaran sitemap stabil antar permintaan.
  */
 export async function listBooksForSitemap(): Promise<Book[]> {
-  const baris = await query<Record<string, unknown>>(
-    `SELECT ${KOLOM_BUKU} FROM books ORDER BY title ASC, id ASC`
-  );
-  return baris.map(mapRow);
+  return [...booksStore].sort((a, b) => a.title.localeCompare(b.title, "id"));
 }
 
 /**
  * Seluruh buku, kedua status, untuk daftar admin.
- *
- * Terpisah dari `listBooks` karena daftar admin tidak disaring per status:
- * admin perlu melihat seluruh isi katalog di satu tempat, termasuk buku
- * yang baru disimpan sebagai `upcoming`. Urutannya waktu ubah terbaru di
- * atas — yang baru saja disunting admin hampir selalu yang ingin ia lihat
- * lagi — dengan `id` sebagai pemecah seri agar pagination deterministik.
  */
-export async function listAllBooks(opts: {
-  page?: number;
-  pageSize?: number;
-} = {}): Promise<Page<Book>> {
+export async function listAllBooks(
+  opts: {
+    page?: number;
+    pageSize?: number;
+  } = {}
+): Promise<Page<Book>> {
   const pageSize = pageSizeDipakai(opts.pageSize);
 
-  const [hitung] = await query<{ total: number }>("SELECT COUNT(*) AS total FROM books");
-  const total = Number(hitung.total);
+  const diurut = [...booksStore].sort(
+    (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+  );
+
+  const total = diurut.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const page = normalizePage(opts.page, totalPages);
 
   const offset = (page - 1) * pageSize;
-  const baris = await query<Record<string, unknown>>(
-    `SELECT ${KOLOM_BUKU} FROM books ORDER BY updated_at DESC, id ASC LIMIT ? OFFSET ?`,
-    [Number(pageSize), Number(offset)]
-  );
+  const items = diurut.slice(offset, offset + pageSize);
 
-  return jadikanHalaman(baris.map(mapRow), total, page, pageSize);
+  return jadikanHalaman(items, total, page, pageSize);
 }
 
 /**
  * Jumlah buku per status, untuk ringkasan dashboard.
- *
- * Satu query `GROUP BY`, bukan dua `COUNT(*)` terpisah: status yang belum
- * terisi tidak muncul sebagai baris di hasil `GROUP BY`, dan itu justru
- * yang membuat keduanya bisa dibedakan dari status yang berjumlah nol.
  */
 export async function countBooksByStatus(): Promise<Record<BookStatus, number>> {
-  const baris = await query<{ status: BookStatus; jumlah: number }>(
-    "SELECT status, COUNT(*) AS jumlah FROM books GROUP BY status"
-  );
-
   const hasil: Record<BookStatus, number> = { published: 0, upcoming: 0 };
-  for (const b of baris) {
-    hasil[b.status] = Number(b.jumlah);
+  for (const b of booksStore) {
+    hasil[b.status] = (hasil[b.status] ?? 0) + 1;
   }
   return hasil;
 }
 
-export async function getBookBySlug(slug: string): Promise<Book | null> {  const baris = await query<Record<string, unknown>>(
-    `SELECT ${KOLOM_BUKU} FROM books WHERE slug = ?`,
-    [slug]
-  );
-  return baris.length > 0 ? mapRow(baris[0]) : null;
+export async function getBookBySlug(slug: string): Promise<Book | null> {
+  const buku = booksStore.find((b) => b.slug === slug);
+  return buku ?? null;
 }
 
 export async function getBookById(id: string): Promise<Book | null> {
-  const baris = await query<Record<string, unknown>>(
-    `SELECT ${KOLOM_BUKU} FROM books WHERE id = ?`,
-    [id]
-  );
-  return baris.length > 0 ? mapRow(baris[0]) : null;
-}
-
-async function ambilSetelahTulis(id: string): Promise<Book> {
-  const buku = await getBookById(id);
-  if (buku === null) {
-    throw new Error(`Buku ${id} hilang tepat setelah ditulis.`);
-  }
-  return buku;
-}
-
-function galatSlug(error: unknown): boolean {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    (error as { code?: unknown }).code === "ER_DUP_ENTRY"
-  );
+  const buku = booksStore.find((b) => b.id === id);
+  return buku ?? null;
 }
 
 /**
- * Menyimpan buku baru.
- *
- * Slug selalu diturunkan dari judul — pemanggil tidak boleh menentukannya.
- * Judul berbeda yang menghasilkan slug sama akan ditolak database lewat
- * `uq_books_slug`, dan galat mentah MySQL diterjemahkan menjadi pesan yang
- * bisa dibaca admin, bukan dibiarkan naik ke antarmuka.
+ * Menyimpan buku baru (in-memory).
  */
 export async function createBook(input: unknown): Promise<WriteResult> {
   const divalidasi = validateBookInput(input);
@@ -196,110 +248,83 @@ export async function createBook(input: unknown): Promise<WriteResult> {
   if (slug === "") {
     return {
       ok: false,
-      errors: { title: "Judul harus memuat huruf atau angka agar alamat halamannya bisa dibentuk." },
+      errors: {
+        title: "Judul harus memuat huruf atau angka agar alamat halamannya bisa dibentuk.",
+      },
     };
   }
 
-  try {
-    const hasil = await execute(
-      `INSERT INTO books (title, slug, author, synopsis, publisher_info, book_info, cover_path, status, estimated_release, isbn, price_print, price_ebook)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        value.title,
-        slug,
-        value.author,
-        value.synopsis,
-        value.publisherInfo,
-        value.bookInfo,
-        value.coverPath,
-        value.status,
-        value.estimatedRelease,
-        value.isbn,
-        value.pricePrint,
-        value.priceEbook,
-      ]
-    );
-
-    const id = await idBarisBaru(hasil.insertId, slug);
-    return { ok: true, book: await ambilSetelahTulis(id) };
-  } catch (error) {
-    if (galatSlug(error)) {
-      return { ok: false, errors: { slug: "Slug sudah dipakai buku lain." } };
-    }
-    throw error;
+  if (booksStore.some((b) => b.slug === slug)) {
+    return { ok: false, errors: { slug: "Slug sudah dipakai buku lain." } };
   }
+
+  const now = new Date();
+  const bukuBaru: Book = {
+    id: `cmm-buku-${Date.now()}`,
+    title: value.title,
+    slug,
+    author: value.author,
+    synopsis: value.synopsis,
+    publisherInfo: value.publisherInfo,
+    bookInfo: value.bookInfo,
+    coverPath: value.coverPath,
+    status: value.status,
+    estimatedRelease: value.estimatedRelease,
+    isbn: value.isbn,
+    pricePrint: value.pricePrint,
+    priceEbook: value.priceEbook,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  booksStore.unshift(bukuBaru);
+  return { ok: true, book: bukuBaru };
 }
 
 /**
- * `insertId` dari MySQL tidak berguna di sini: primary key tabel ini
- * `CHAR(36)` yang diisi `DEFAULT (UUID())`, sehingga `insertId` selalu 0.
- * Baris barunya ditemukan lewat slug, yang pasti unik.
- */
-async function idBarisBaru(insertId: number, slug: string): Promise<string> {
-  if (insertId > 0) return String(insertId);
-
-  const baris = await query<{ id: string }>("SELECT id FROM books WHERE slug = ?", [slug]);
-  if (baris.length === 0) {
-    throw new Error(`Buku dengan slug "${slug}" tidak ditemukan tepat setelah disimpan.`);
-  }
-  return baris[0].id;
-}
-
-/**
- * Memperbarui buku yang ada, termasuk slug-nya.
- *
- * Slug ikut diperbarui karena brief §8 mengizinkan admin memperbaiki alamat
- * halaman ("slug otomatis dari judul namun dapat diperbaiki; validasi unik")
- * dan menuntut slug lama ikut diinvalidasi bila berubah. Pemanggil yang
- * bertanggung jawab menyimpan slug lama untuk merevalidasi alamat itu.
- *
- * Slug kosong ditolak di validator, bukan diisi ulang dari judul: alamat
- * halaman tidak boleh berubah diam-diam saat admin hanya menyunting penulis.
+ * Memperbarui buku yang ada (in-memory).
  */
 export async function updateBook(id: string, input: unknown): Promise<WriteResult> {
   const divalidasi = validateBookUpdateInput(input);
   if (!divalidasi.ok) return { ok: false, errors: divalidasi.errors };
 
   const value = divalidasi.value;
-
-  try {
-    const hasil = await execute(
-      `UPDATE books
-          SET title = ?, slug = ?, author = ?, synopsis = ?, publisher_info = ?, book_info = ?,
-              cover_path = ?, status = ?, estimated_release = ?, isbn = ?,
-              price_print = ?, price_ebook = ?
-        WHERE id = ?`,
-      [
-        value.title,
-        value.slug,
-        value.author,
-        value.synopsis,
-        value.publisherInfo,
-        value.bookInfo,
-        value.coverPath,
-        value.status,
-        value.estimatedRelease,
-        value.isbn,
-        value.pricePrint,
-        value.priceEbook,
-        id,
-      ]
-    );
-
-    if (hasil.affectedRows !== 1) {
-      return { ok: false, errors: { form: "Buku tidak ditemukan." } };
-    }
-
-    return { ok: true, book: await ambilSetelahTulis(id) };
-  } catch (error) {
-    if (galatSlug(error)) {
-      return { ok: false, errors: { slug: "Slug sudah dipakai buku lain." } };
-    }
-    throw error;
+  const index = booksStore.findIndex((b) => b.id === id);
+  if (index === -1) {
+    return { ok: false, errors: { form: "Buku tidak ditemukan." } };
   }
+
+  const adaSlugLain = booksStore.some(
+    (b) => b.slug === value.slug && b.id !== id
+  );
+  if (adaSlugLain) {
+    return { ok: false, errors: { slug: "Slug sudah dipakai buku lain." } };
+  }
+
+  const bukuLama = booksStore[index];
+  const bukuBaru: Book = {
+    ...bukuLama,
+    title: value.title,
+    slug: value.slug,
+    author: value.author,
+    synopsis: value.synopsis,
+    publisherInfo: value.publisherInfo,
+    bookInfo: value.bookInfo,
+    coverPath: value.coverPath,
+    status: value.status,
+    estimatedRelease: value.estimatedRelease,
+    isbn: value.isbn,
+    pricePrint: value.pricePrint,
+    priceEbook: value.priceEbook,
+    updatedAt: new Date(),
+  };
+
+  booksStore[index] = bukuBaru;
+  return { ok: true, book: bukuBaru };
 }
 
 export async function deleteBook(id: string): Promise<{ ok: boolean }> {
-  const hasil = await execute("DELETE FROM books WHERE id = ?", [id]);
-  return { ok: hasil.affectedRows === 1 };
+  const sebelum = booksStore.length;
+  booksStore = booksStore.filter((b) => b.id !== id);
+  return { ok: booksStore.length < sebelum };
 }
